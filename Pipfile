@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+mixinsdk = "*"
+sqlalchemy = "*"
+eth-account = "*"
+rumpy = "==0.6.4"
+protobuf = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
