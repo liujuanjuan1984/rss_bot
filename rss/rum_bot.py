@@ -12,7 +12,7 @@ import rumpy.utils as utils
 from mixinsdk.clients.http_client import HttpClient_AppAuth
 from mixinsdk.clients.user_config import AppConfig
 from mixinsdk.types.message import MessageView, pack_message, pack_text_data
-from rumpy import FullNode, HttpRequest
+from rumpy import FullNode, MiniNode
 from sqlalchemy import Boolean, Column, Integer, String, and_, distinct
 
 from blaze.config import DB_NAME, MIXIN_KEYSTORE
@@ -25,12 +25,13 @@ logger = logging.getLogger(__name__)
 
 
 class RumBot:
-    def __init__(self, blaze_db_name, rss_db_name, mixin_keystore, rum_port):
+    def __init__(self, blaze_db_name, rss_db_name, mixin_keystore, rum_port, seedurl):
         self.config = AppConfig.from_payload(mixin_keystore)
         self.blaze_db = BlazeDB(blaze_db_name, echo=False, reset=False)
         self.rss_db = RssDB(rss_db_name, echo=False, reset=False)
         self.xin = HttpClient_AppAuth(self.config)
         self.full_rum = FullNode(port=rum_port)
+        self.mini_rum = MiniNode(seedurl)
         self.groups = RSS_GROUPS
         self.update_all_profiles("bot")
 
@@ -120,7 +121,7 @@ class RumBot:
             logger.warning(f"group_id: {group_id}, you are not in this group. you need to join it.")
             return
 
-        nicknames = self.get_nicknames(group_id)  # TODO:to update and check
+        nicknames = self.get_nicknames(group_id)
         gname = self.groups[group_id]["group_name"]
         minutes = self.groups[group_id]["minutes"]
 
@@ -237,20 +238,18 @@ class RumBot:
         for msg in mixin_msgs:
             if self.blaze_db.get_messages_status(msg.message_id, "SEND_TO_RUM"):
                 continue
-
-            pvtkey = self.rss_db.get_privatekey(msg.user_id)
-            # TODO: signTrx with privatekey, need rumpy supported.
-
             if msg.user_id != MY_XIN_USER_ID:
-                continue
-            if msg.text.startswith(r"代发微博"):
-                group_id = "3bb7a3be-d145-44af-94cf-e64b992ff8f0"
-                text = msg.text[5:]
+                pvtkey = self.rss_db.get_privatekey(msg.user_id).replace("0x", "")
+                resp = self.mini_rum.send_trx(pvtkey, content=msg.text[3:])
             else:
-                group_id = "4e784292-6a65-471e-9f80-e91202e3358c"
-                text = msg.text[3:]
-            print("send_to_rum, text:", text)
-            resp = self.full_rum.api.send_note(group_id=group_id, content=text)
+                if msg.text.startswith(r"代发微博"):
+                    group_id = "3bb7a3be-d145-44af-94cf-e64b992ff8f0"
+                    text = msg.text[5:]
+                else:
+                    group_id = "4e784292-6a65-471e-9f80-e91202e3358c"
+                    text = msg.text[3:]
+                print("send_to_rum, text:", text)
+                resp = self.full_rum.api.send_note(group_id=group_id, content=text)
 
             if "trx_id" not in resp:
                 continue

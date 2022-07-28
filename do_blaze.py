@@ -39,6 +39,8 @@ async def message_handle(message):
         # logger.info("Mixin blaze server: list pending message")
         return
 
+    msgview = MessageView.from_dict(message["data"])
+
     if action == "ERROR":
         logger.warning(message["error"])
         await bot.blaze.echo(msgview.message_id)
@@ -53,8 +55,6 @@ async def message_handle(message):
         logger.info(str(error))
         await bot.blaze.echo(msgview.message_id)
         return
-
-    msgview = MessageView.from_dict(message["data"])
 
     # 和 server 有 -8 时差。也就是只处理 1 小时内的 message
     if msgview.created_at <= datetime.datetime.now() + datetime.timedelta(hours=-9):

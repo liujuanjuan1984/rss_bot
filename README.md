@@ -62,11 +62,6 @@ pipenv run python do_reply.py
 ```
 
 - rss 服务：从 rum 获取最新内容，并根据用户订阅推送给用户
-
-```bash
-pipenv run python do_rss.py
-```
-
 - rum 服务：把以“代发：”开头的消息文本，采用托管的密钥发布到指定的 rum group 上
 
 ```bash
