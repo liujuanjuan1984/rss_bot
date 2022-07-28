@@ -25,7 +25,21 @@
 ```bash
 git clone https://github.com/liujuanjuan1984/rss_bot.git
 cd rss_bot
+```
+
+初始化环境：
+
+可能需要安装 vc C++ 相关依赖组件
+
+```bash
 pipenv install
+```
+
+如果不需要虚拟环境，也可以直接安装：
+
+```bash
+pip install -r requirements.txt
+
 ```
 
 4、更新配置文件

@@ -1,13 +1,13 @@
 import os
 
-DB_NAME = f"sqlite:///{os.path.dirname(__file__)}rss_bot.db"
+DB_NAME = f"sqlite:///{os.path.dirname(os.path.dirname(__file__))}/rss_bot.db"
 
-RUM_PORT = 51098
+RUM_PORT = 62663
 
 RUM_ASSET_ID = "4f2ec12c-22f4-3a9e-b757-c84b6415ea8f"
 MY_XIN_USER_ID = "bae95683-eabb-422f-9588-24dadffd0323"
 MY_RUM_GROUP_ID = "4e784292-6a65-471e-9f80-e91202e3358c"
-RUM_REWARD_BASE_NUM = 0.000001
+RUM_REWARD_BASE_NUM = 0.0001
 
 # fake data for test, please update: create the group and get the group info.
 RUM_GROUPID = "27ab3bcd-3a32-4bff-9778-0d4a5c776925"

@@ -1,0 +1,5 @@
+mixinsdk
+sqlalchemy
+eth-account
+rumpy==0.7.1
+protobuf

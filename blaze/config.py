@@ -1,6 +1,7 @@
 import os
 
-DB_NAME = f"sqlite:///{os.path.dirname(__file__)}blaze_messages.db"
+DB_NAME = f"sqlite:///{os.path.dirname(os.path.dirname(__file__))}/blaze_messages.db"
+API_BASE_BLAZE = "wss://mixin-blaze.zeromesh.net"
 
 # fake data for test, please update
 MIXIN_KEYSTORE = {
