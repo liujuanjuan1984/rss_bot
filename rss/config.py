@@ -6,9 +6,10 @@ RUM_PORT = 62663
 jwt_token = ""
 ip = "127.0.0.1"
 
+APIHOST = f"http://{ip}:{RUM_PORT}?jwt={jwt_token}"
 SEEDURL = (
     f"rum://seed?v=1&e=0&n=0&b=fDLEJaQbSguWukji6IFjdQ&c=nZ4Tzjt39q4dpOXvFdlP8i535QncTjvdcPp0NfOpmSs&g=O7ejvtFFRK-Uz-ZLmS_48A&k=CAISIQKm%2BgTifqG6ga1FUb9NzXDetFIi9AosQSx%2FRBFH3RbGFQ%3D%3D&s=MEYCIQDlshiApdymHMDK65Qv9VqGevyspb3WW9cLcbHF0r7QagIhAMCxvEREmkQi2IReMu9OBx1rjSJvEcq510CywXYYsWHx&t=Fq-eR5Mpg6k&a=%E5%8E%BB%E4%B8%AD%E5%BF%83%E5%BE%AE%E5%8D%9A&y=group_timeline&u="
-    + f"http://{ip}:{RUM_PORT}?jwt={jwt_token}"
+    + APIHOST
 )
 RUM_ASSET_ID = "4f2ec12c-22f4-3a9e-b757-c84b6415ea8f"
 MY_XIN_USER_ID = "bae95683-eabb-422f-9588-24dadffd0323"

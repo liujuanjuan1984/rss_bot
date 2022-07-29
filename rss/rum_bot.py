@@ -245,10 +245,11 @@ class RumBot:
                 if self.blaze_db.get_messages_status(msg.message_id, "SEND_TO_RUM"):
                     continue
                 pvtkey = self.rss_db.get_privatekey(msg.user_id).replace("0x", "")
-                resp = self.mini_rum.send_trx(pvtkey, content=msg.text, reply_trx_id=quoted.trx_id)
+                seedurl = self.full_rum.api.seed(quoted.group_id).get("seed", "") + APIHOST
+                resp = self.mini_rum.send_trx(pvtkey, content=msg.text, reply_trx_id=quoted.trx_id, seedurl=seedurl)
                 if "trx_id" in resp:
                     self.blaze_db.add_status(msg.message_id, "SEND_TO_RUM")
-                    self.rss_db.update_sent_msgs(msg.message_id, resp["trx_id"], COMMON_RUM_GROUP_ID, msg.user_id)
+                    self.rss_db.update_sent_msgs(msg.message_id, resp["trx_id"], quoted.group_id, msg.user_id)
 
         mixin_msgs = self.blaze_db.get_messages_query("代发%")
         for msg in mixin_msgs:
@@ -258,7 +259,7 @@ class RumBot:
                 continue
             if msg.user_id != MY_XIN_USER_ID:
                 pvtkey = self.rss_db.get_privatekey(msg.user_id).replace("0x", "")
-                resp = self.mini_rum.send_trx(pvtkey, content=msg.text[3:])
+                resp = self.mini_rum.send_trx(pvtkey, content=msg.text[3:], seedurl=SEEDURL)
             else:
                 if msg.text.startswith(r"代发微博"):
                     group_id = COMMON_RUM_GROUP_ID
