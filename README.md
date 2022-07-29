@@ -1,6 +1,6 @@
 # RUM 种子网络订阅器
 
-这是一个基于 mixin messenger 的 bot，让 mixin 的用户更方便地参与到 Rum 的生态之中。
+这是一个基于 mixin messenger 的 bot 源码，让 mixin 的用户更方便地参与到 Rum 的生态之中。
 
 其功能是：
 
@@ -10,13 +10,13 @@
 
 3、bot 可以根据一定条件向用户空投 token
 
-4、bot 即将支持代发，帮用户把内容发布到 rum group 上
+4、bot 可以帮助用户（自动用 mixin_id 映射一个 rum 账号）把内容代为发布到 rum group 上
 
 实例： mixin bot 7000104017
 
 ## 如何部署？
 
-1、mixin bot： 在 mixin 开发者后台申请创建，获得 keystore 
+1、mixin bot： 在 mixin 开发者后台申请创建，获得 session keystore 
 
 2、rum fullnode：加入所有可订阅的 rum groups ，为动态转发提供数据源，为内容代发提供上链入口
 
@@ -29,18 +29,11 @@ cd rss_bot
 
 初始化环境：
 
-可能需要安装 vc C++ 相关依赖组件
+```pipenv install``` 可能需要安装 bitarray 的依赖组件
 
-```bash
-pipenv install
-```
+或
 
-如果不需要虚拟环境，也可以直接安装：
-
-```bash
-pip install -r requirements.txt
-
-```
+```pip install -r requirements.txt```
 
 4、更新配置文件
 
@@ -94,5 +87,4 @@ Format:
 ```bash
 isort .
 black -l 120 -t py37 -t py38 -t py39 -t py310 .
-
 ```
