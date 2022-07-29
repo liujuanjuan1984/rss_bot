@@ -13,6 +13,7 @@ from rss.modules.base import BaseDB
 from rss.modules.keystore import KeyStore
 from rss.modules.profile import Profile
 from rss.modules.rss import Rss
+from rss.modules.sent_msgs import SentMsgs
 from rss.modules.trx import Trx
 from rss.modules.trx_progress import TrxProgress
 from rss.modules.trx_status import TrxStatus
@@ -133,3 +134,18 @@ class RssDB(BaseDB):
             "user_id": user_id,
         }
         self.add(TrxStatus(_p))
+
+    def get_sent_msg(self, message_id):
+        return self.session.query(SentMsgs).filter(SentMsgs.message_id == message_id).first()
+
+    def update_sent_msgs(self, message_id, trx_id, group_id, mixin_id):
+        if self.get_sent_msg(message_id):
+            return
+
+        _p = {
+            "message_id": message_id,
+            "trx_id": trx_id,
+            "group_id": group_id,
+            "user_id": mixin_id,
+        }
+        self.add(SentMsgs(_p))

@@ -232,8 +232,24 @@ class RumBot:
 
                     if "data" in resp:
                         self.rss_db.add_trx_sent(group_id, trx.trx_id, user_id)
+                        self.rss_db.update_sent_msgs(resp["data"]["message_id"], trx.trx_id, group_id, user_id)
 
     def send_to_rum(self):
+        # 如果有 引用，检查被引用的 msg 是否推送到了 rum group，然后就自动产生回复
+        # quote_message_id
+
+        quote_msgs = self.blaze_db.get_messages_by_quote()
+        for msg in quote_msgs:
+            quoted = self.rss_db.get_sent_msg(msg.quote_message_id)
+            if quoted:
+                if self.blaze_db.get_messages_status(msg.message_id, "SEND_TO_RUM"):
+                    continue
+                pvtkey = self.rss_db.get_privatekey(msg.user_id).replace("0x", "")
+                resp = self.mini_rum.send_trx(pvtkey, content=msg.text, reply_trx_id=quoted.trx_id)
+                if "trx_id" in resp:
+                    self.blaze_db.add_status(msg.message_id, "SEND_TO_RUM")
+                    self.rss_db.update_sent_msgs(msg.message_id, resp["trx_id"], COMMON_RUM_GROUP_ID, msg.user_id)
+
         mixin_msgs = self.blaze_db.get_messages_query("代发%")
         for msg in mixin_msgs:
             if self.blaze_db.get_messages_status(msg.message_id, "SEND_TO_RUM"):
@@ -245,18 +261,17 @@ class RumBot:
                 resp = self.mini_rum.send_trx(pvtkey, content=msg.text[3:])
             else:
                 if msg.text.startswith(r"代发微博"):
-                    group_id = "3bb7a3be-d145-44af-94cf-e64b992ff8f0"
+                    group_id = COMMON_RUM_GROUP_ID
                     text = msg.text[5:]
                 else:
-                    group_id = "4e784292-6a65-471e-9f80-e91202e3358c"
+                    group_id = MY_RUM_GROUP_ID
                     text = msg.text[3:]
                 print("send_to_rum, text:", text)
                 resp = self.full_rum.api.send_note(group_id=group_id, content=text)
 
-            if "trx_id" not in resp:
-                continue
-
-            self.blaze_db.add_status(msg.message_id, "SEND_TO_RUM")
+            if "trx_id" in resp:
+                self.blaze_db.add_status(msg.message_id, "SEND_TO_RUM")
+                self.rss_db.update_sent_msgs(msg.message_id, resp["trx_id"], group_id, msg.user_id)
 
     def do_rss(self):
         for group_id in self.groups:

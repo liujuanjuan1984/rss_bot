@@ -48,6 +48,9 @@ class BlazeDB(BaseDB):
     def get_messages_by_user(self, user_id):
         return self.session.query(Message).filter(Message.user_id == user_id).all()
 
+    def get_messages_by_quote(self):
+        return self.session.query(Message).filter(Message.quote_message_id != "").all()
+
     def get_messages_by_time(self, hours=-9):
         # 和 server 有 -8 时差。-9 也就是只处理 1 小时内的 message
         target_datetime = datetime.datetime.now() + datetime.timedelta(hours=hours)
@@ -56,7 +59,12 @@ class BlazeDB(BaseDB):
     def get_messages_query(self, text_piece):
         if "%" not in text_piece:
             text_piece = "%{}%".format(text_piece)
-        return self.session.query(Message).filter(Message.text.like(text_piece)).all()
+        return (
+            self.session.query(Message)
+            .filter(Message.text.like(text_piece))
+            .filter(Message.quote_message_id == "")
+            .all()
+        )
 
     def get_messages_status(self, message_id: str, status: str):
         return (

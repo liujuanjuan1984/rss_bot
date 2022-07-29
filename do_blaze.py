@@ -31,6 +31,7 @@ async def message_handle(message):
     global bot
     action = message["action"]
 
+    # messages sent by bot
     if action == "ACKNOWLEDGE_MESSAGE_RECEIPT":
         # logger.info("Mixin blaze server: received the message")
         return
@@ -53,23 +54,20 @@ async def message_handle(message):
 
     msgview = MessageView.from_dict(message["data"])
 
-    # 和 server 有 -8 时差。也就是只处理 1 小时内的 message
-    if msgview.created_at <= datetime.datetime.now() + datetime.timedelta(hours=-9):
-        await bot.blaze.echo(msgview.message_id)
-        return
-
     if msgview.type != "message":
         await bot.blaze.echo(msgview.message_id)
         return
 
+    # 和 server 有 -8 时差。也就是只处理 1 小时内的 message
+    if msgview.created_at <= datetime.datetime.now() + datetime.timedelta(hours=-9):
+        await bot.blaze.echo(msgview.message_id)
+        return
     if msgview.conversation_id in ("", None):
         await bot.blaze.echo(msgview.message_id)
         return
-
     if msgview.data_decoded in ("", None):
         await bot.blaze.echo(msgview.message_id)
         return
-
     if type(msgview.data_decoded) != str:
         await bot.blaze.echo(msgview.message_id)
         return

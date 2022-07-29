@@ -13,6 +13,7 @@ SEEDURL = (
 RUM_ASSET_ID = "4f2ec12c-22f4-3a9e-b757-c84b6415ea8f"
 MY_XIN_USER_ID = "bae95683-eabb-422f-9588-24dadffd0323"
 MY_RUM_GROUP_ID = "4e784292-6a65-471e-9f80-e91202e3358c"
+COMMON_RUM_GROUP_ID = "3bb7a3be-d145-44af-94cf-e64b992ff8f0"
 RUM_REWARD_BASE_NUM = 0.0001
 
 # fake data for test, please update: create the group and get the group info.

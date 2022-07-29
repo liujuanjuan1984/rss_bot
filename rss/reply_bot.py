@@ -93,10 +93,18 @@ class ReplyBot:
         reply_text, irss = self.get_reply_text(msg.text)
         self.update_rss_for_user(msg.user_id, irss)
 
+        if msg.quote_message_id:
+            self.blaze_db.add_status(msg.message_id, "replied")
+            return True
+
+        if msg.user_id == MIXIN_KEYSTORE["client_id"]:
+            self.blaze_db.add_status(msg.message_id, "replied")
+            return True
+
         # send reply
         reply_msg = pack_message(
             pack_text_data(reply_text),
-            conversation_id=msg.conversation_id,
+            conversation_id=self.xin.get_conversation_id_with_user(msg.user_id),
             quote_message_id=msg.message_id,
         )
 
