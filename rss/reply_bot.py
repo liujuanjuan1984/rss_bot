@@ -27,6 +27,8 @@ class ReplyBot:
             return WELCOME_TEXT, None
 
         if type(text) == str and text.startswith("代发"):
+            if len(text) < 5:  # too short to send
+                return "太短啦", None
             return "收到，将为您自动发送到去中心微博", None
 
         if type(text) == str and text.startswith("生日"):

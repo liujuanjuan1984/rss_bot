@@ -238,6 +238,8 @@ class RumBot:
         for msg in mixin_msgs:
             if self.blaze_db.get_messages_status(msg.message_id, "SEND_TO_RUM"):
                 continue
+            if len(msg.text) < 5:  # too short to send
+                continue
             if msg.user_id != MY_XIN_USER_ID:
                 pvtkey = self.rss_db.get_privatekey(msg.user_id).replace("0x", "")
                 resp = self.mini_rum.send_trx(pvtkey, content=msg.text[3:])
