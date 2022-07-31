@@ -242,6 +242,8 @@ class RumBot:
         for msg in quote_msgs:
             quoted = self.rss_db.get_sent_msg(msg.quote_message_id)
             if quoted:
+                if quoted.group_id in PRIVATE_GROUPS:
+                    continue
                 if self.blaze_db.get_messages_status(msg.message_id, "SEND_TO_RUM"):
                     continue
                 pvtkey = self.rss_db.get_privatekey(msg.user_id).replace("0x", "")
@@ -267,7 +269,7 @@ class RumBot:
                 else:
                     group_id = MY_RUM_GROUP_ID
                     text = msg.text[3:]
-                print("send_to_rum, text:", text)
+                print("send_to_rum, message_id:", msg.message_id)
                 resp = self.full_rum.api.send_note(group_id=group_id, content=text)
 
             if "trx_id" in resp:

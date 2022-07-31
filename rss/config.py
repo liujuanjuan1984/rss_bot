@@ -75,6 +75,8 @@ RSS_BOT_COMMANDS = {
     "99": {"text": "订阅以上所有", "group_id": -1},
 }
 
+PRIVATE_GROUPS = ["a6aac332-7c8d-4632-bf3c-725368bb89d5"]
+
 
 def check_groups():
     groups = {}
