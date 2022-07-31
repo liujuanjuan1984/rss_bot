@@ -3,7 +3,7 @@ import logging
 
 from sqlalchemy import Boolean, Column, Integer, String
 
-from rss.modules import Base
+from rss.models import Base
 
 logger = logging.getLogger(__name__)
 

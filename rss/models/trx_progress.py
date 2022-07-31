@@ -3,20 +3,21 @@ import logging
 
 from sqlalchemy import Column, Integer, String
 
-from rss.modules import Base
+from rss.models import Base
 
 logger = logging.getLogger(__name__)
 
 
-class KeyStore(Base):
-    """each mixin_id got a keystore"""
+class TrxProgress(Base):
+    """the progress trx_id of rum groups"""
 
-    __tablename__ = "keystores"
+    __tablename__ = "trx_progress"
 
     id = Column(Integer, primary_key=True, unique=True, index=True)
-    user_id = Column(String(36), unique=True, index=True)  # mixin_id
-    addr = Column(String, default=None)
-    keystore = Column(String)
+    progress_type = Column(String(36))
+    trx_id = Column(String(36), default=None)
+    timestamp = Column(String)  # the timestamp of the trx
+    group_id = Column(String(36))
     created_at = Column(String, default=str(datetime.datetime.now()))
     updated_at = Column(String, default=str(datetime.datetime.now()))
 

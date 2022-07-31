@@ -7,9 +7,10 @@ name = "pypi"
 mixinsdk = "*"
 sqlalchemy = "*"
 eth-account = "*"
-rumpy = "==0.7.1"
+rumpy = "==0.7.3"
 protobuf = "*"
 bitarray = "*"
+alembic = "*"
 
 [dev-packages]
 

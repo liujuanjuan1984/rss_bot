@@ -1,9 +1,9 @@
 import datetime
 import logging
 
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Boolean, Column, Integer, String
 
-from blaze.modules import Base
+from blaze.models import Base
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +15,8 @@ class Message(Base):
 
     id = Column(Integer, unique=True, primary_key=True, index=True)
     message_id = Column(String(36), unique=True)
+    replied = Column(Boolean, default=None)
+    sent_to_rum = Column(Boolean, default=None)
     quote_message_id = Column(String(36), default=None)
     conversation_id = Column(String(36), default=None)
     user_id = Column(String(36), default=None)

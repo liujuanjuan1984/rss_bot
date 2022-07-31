@@ -88,3 +88,15 @@ Format:
 isort .
 black -l 120 -t py37 -t py38 -t py39 -t py310 .
 ```
+
+db: 
+
+[使用alembic为SQLAlchemy迁移数据](https://www.cnblogs.com/lczmx/p/15913991.html)
+
+```
+alembic revision --autogenerate -m "memo"
+```
+
+查询 db 表结构字段：
+
+PRAGMA table_info([messages]);

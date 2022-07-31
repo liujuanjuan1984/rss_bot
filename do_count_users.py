@@ -1,5 +1,5 @@
 from rss.config import DB_NAME, RSS_GROUPS
-from rss.modules import RssDB
+from rss.models import RssDB
 
 db = RssDB(DB_NAME, False, False)
 

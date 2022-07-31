@@ -3,7 +3,7 @@ import logging
 
 from sqlalchemy import Column, Integer, String
 
-from blaze.modules import Base
+from blaze.models import Base
 
 logger = logging.getLogger(__name__)
 

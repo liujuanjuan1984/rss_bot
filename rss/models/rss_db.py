@@ -8,15 +8,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from rss.config import COMMON_ACCOUNT_PWD
-from rss.modules import Base
-from rss.modules.base import BaseDB
-from rss.modules.keystore import KeyStore
-from rss.modules.profile import Profile
-from rss.modules.rss import Rss
-from rss.modules.sent_msgs import SentMsgs
-from rss.modules.trx import Trx
-from rss.modules.trx_progress import TrxProgress
-from rss.modules.trx_status import TrxStatus
+from rss.models import Base
+from rss.models.base import BaseDB
+from rss.models.keystore import KeyStore
+from rss.models.profile import Profile
+from rss.models.rss import Rss
+from rss.models.sent_msgs import SentMsgs
+from rss.models.trx import Trx
+from rss.models.trx_progress import TrxProgress
+from rss.models.trx_status import TrxStatus
 
 logger = logging.getLogger(__name__)
 

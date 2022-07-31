@@ -6,7 +6,7 @@ from mixinsdk.clients.user_config import AppConfig
 from mixinsdk.types.message import MessageView
 
 from blaze.config import BLAZE_ZEROMESH, DB_NAME, MIXIN_KEYSTORE
-from blaze.modules import BlazeDB
+from blaze.models import BlazeDB
 
 logger = logging.getLogger(__name__)
 
@@ -72,7 +72,7 @@ async def message_handle(message):
         await bot.blaze.echo(msgview.message_id)
         return
 
-    print(msgview.message_id, msgview.data_decoded[:20])
+    print(msgview.created_at, msgview.user_id, msgview.message_id)
     if bot.db.add_message(msgview, session=bot.db.Session()):
         await bot.blaze.echo(msgview.message_id)
     return

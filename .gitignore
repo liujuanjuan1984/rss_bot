@@ -134,3 +134,4 @@ dmypy.json
 
 *.db
 * copy.py
+blaze/mixin_keystore.json

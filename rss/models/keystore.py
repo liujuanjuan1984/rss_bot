@@ -3,22 +3,20 @@ import logging
 
 from sqlalchemy import Column, Integer, String
 
-from rss.modules import Base
+from rss.models import Base
 
 logger = logging.getLogger(__name__)
 
 
-class Profile(Base):
-    """the users profiles in rum groups."""
+class KeyStore(Base):
+    """each mixin_id got a keystore"""
 
-    __tablename__ = "profiles"
+    __tablename__ = "keystores"
 
     id = Column(Integer, primary_key=True, unique=True, index=True)
-    group_id = Column(String(36))
-    pubkey = Column(String(36))
-    name = Column(String(36))
-    wallet = Column(String, default=None)
-    timestamp = Column(String)
+    user_id = Column(String(36), unique=True, index=True)  # mixin_id
+    addr = Column(String, default=None)
+    keystore = Column(String)
     created_at = Column(String, default=str(datetime.datetime.now()))
     updated_at = Column(String, default=str(datetime.datetime.now()))
 

@@ -6,17 +6,19 @@ from mixinsdk.clients.http_client import HttpClient_AppAuth
 from mixinsdk.clients.user_config import AppConfig
 from mixinsdk.types.message import MessageView, pack_message, pack_text_data
 
-from blaze.config import DB_NAME, HTTP_ZEROMESH, MIXIN_KEYSTORE
-from blaze.modules import BlazeDB
+from blaze.config import DB_NAME as BLAZE_DB_NAME
+from blaze.config import HTTP_ZEROMESH, MIXIN_KEYSTORE
+from blaze.models import BlazeDB
+from rss.config import DB_NAME as RSS_DB_NAME
 from rss.config import *
-from rss.modules import RssDB
+from rss.models import RssDB
 from rss.seven_years_circle import SevenYearsCircle
 
 logger = logging.getLogger(__name__)
 
 
 class ReplyBot:
-    def __init__(self, blaze_db_name, rss_db_name, mixin_keystore):
+    def __init__(self, blaze_db_name=BLAZE_DB_NAME, rss_db_name=RSS_DB_NAME, mixin_keystore=MIXIN_KEYSTORE):
         self.config = AppConfig.from_payload(mixin_keystore)
         self.blaze_db = BlazeDB(blaze_db_name, echo=False, reset=False)
         self.rss_db = RssDB(rss_db_name, echo=False, reset=False)
@@ -85,21 +87,10 @@ class ReplyBot:
                 continue
             self.rss_db.update_rss(user_id, group_id, irss[group_id])
 
-    def reply(self, msg):
-        existed = self.blaze_db.get_messages_status(msg.message_id, "replied")  # 取出消息
-        if existed:
-            return True  # 已回复过
+    def _reply(self, msg):
 
         reply_text, irss = self.get_reply_text(msg.text)
         self.update_rss_for_user(msg.user_id, irss)
-
-        if msg.quote_message_id:
-            self.blaze_db.add_status(msg.message_id, "replied")
-            return True
-
-        if msg.user_id == MIXIN_KEYSTORE["client_id"]:
-            self.blaze_db.add_status(msg.message_id, "replied")
-            return True
 
         # send reply
         reply_msg = pack_message(
@@ -111,22 +102,20 @@ class ReplyBot:
         resp = self.xin.api.send_messages(reply_msg)
 
         if "data" in resp:
-            self.blaze_db.add_status(msg.message_id, "replied")
+            self.blaze_db.set_message_replied(msg.message_id)
             print(f"{msg.message_id} replied")
             return True
         else:
             print(f"{msg.message_id} failed")
             return False
 
-    def reply_forever(self):
-        while True:
+    def reply(self):
+        msgs = self.blaze_db.get_messages_to_reply()
+        for msg in msgs:
             try:
-                msgs = self.blaze_db.get_messages_by_time(-10)
-                if msgs:
-                    for msg in msgs:
-                        self.reply(msg)
-                time.sleep(0.1)
+                r = self._reply(msg)
+                print(r, msg.message_id)
             except Exception as e:
-                print(e)
-                time.sleep(0.1)
-                continue
+                print(f"{msg.message_id} failed: {e}")
+                logger.error(f"{msg.message_id} failed: {e}")
+            time.sleep(0.5)

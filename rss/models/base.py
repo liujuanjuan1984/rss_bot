@@ -4,19 +4,21 @@ import logging
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from rss.modules import Base
+from rss.config import DB_NAME
+from rss.models import Base
 
 logger = logging.getLogger(__name__)
 
 
 class BaseDB:
-    def __init__(self, db_name, echo, reset):
+    def __init__(self, db_name=DB_NAME, echo=False, reset=False, init=False):
         # 创建数据库
         engine = create_engine(db_name, echo=echo, connect_args={"check_same_thread": False})
         if reset:
             Base.metadata.drop_all(engine)
-        # 创建表
-        Base.metadata.create_all(engine)
+        if init:
+            # 创建表
+            Base.metadata.create_all(engine)
         # 创建会话
         self.Session = sessionmaker(bind=engine, autoflush=False)
         self.session = self.Session()
