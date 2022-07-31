@@ -5,7 +5,7 @@ from mixinsdk.clients.blaze_client import BlazeClient
 from mixinsdk.clients.user_config import AppConfig
 from mixinsdk.types.message import MessageView
 
-from blaze.config import API_BASE_BLAZE, DB_NAME, MIXIN_KEYSTORE
+from blaze.config import BLAZE_ZEROMESH, DB_NAME, MIXIN_KEYSTORE
 from blaze.modules import BlazeDB
 
 logger = logging.getLogger(__name__)
@@ -83,6 +83,6 @@ bot.blaze = BlazeClient(
     bot.config,
     on_message=message_handle,
     on_message_error_callback=message_handle_error_callback,
-    api_base=API_BASE_BLAZE,
+    api_base=BLAZE_ZEROMESH,
 )
 bot.blaze.run_forever(2)

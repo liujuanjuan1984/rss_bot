@@ -6,7 +6,7 @@ from mixinsdk.clients.http_client import HttpClient_AppAuth
 from mixinsdk.clients.user_config import AppConfig
 from mixinsdk.types.message import MessageView, pack_message, pack_text_data
 
-from blaze.config import DB_NAME, MIXIN_KEYSTORE
+from blaze.config import DB_NAME, HTTP_ZEROMESH, MIXIN_KEYSTORE
 from blaze.modules import BlazeDB
 from rss.config import *
 from rss.modules import RssDB
@@ -20,7 +20,7 @@ class ReplyBot:
         self.config = AppConfig.from_payload(mixin_keystore)
         self.blaze_db = BlazeDB(blaze_db_name, echo=False, reset=False)
         self.rss_db = RssDB(rss_db_name, echo=False, reset=False)
-        self.xin = HttpClient_AppAuth(self.config)
+        self.xin = HttpClient_AppAuth(self.config, api_base=HTTP_ZEROMESH)
 
     def get_reply_text(self, text):
         if type(text) == str and text.lower() in ["hi", "hello", "你好", "订阅"]:

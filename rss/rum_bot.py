@@ -15,7 +15,7 @@ from mixinsdk.types.message import MessageView, pack_message, pack_text_data
 from rumpy import FullNode, MiniNode
 from sqlalchemy import Boolean, Column, Integer, String, and_, distinct
 
-from blaze.config import DB_NAME, MIXIN_KEYSTORE
+from blaze.config import DB_NAME, HTTP_ZEROMESH, MIXIN_KEYSTORE
 from blaze.modules import BlazeDB
 from rss.config import *
 from rss.modules import AirDrop, KeyStore, Profile, Rss, RssDB, Trx, TrxProgress, TrxStatus
@@ -29,7 +29,7 @@ class RumBot:
         self.config = AppConfig.from_payload(mixin_keystore)
         self.blaze_db = BlazeDB(blaze_db_name, echo=False, reset=False)
         self.rss_db = RssDB(rss_db_name, echo=False, reset=False)
-        self.xin = HttpClient_AppAuth(self.config)
+        self.xin = HttpClient_AppAuth(self.config, api_base=HTTP_ZEROMESH)
         self.full_rum = FullNode(port=rum_port)
         self.mini_rum = MiniNode(seedurl)
         self.groups = RSS_GROUPS
