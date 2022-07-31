@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-mixinsdk = "*"
+mixinsdk = "==0.1.5"
 sqlalchemy = "*"
 eth-account = "*"
 rumpy = "==0.7.3"

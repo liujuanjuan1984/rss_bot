@@ -294,8 +294,15 @@ class RumBot:
 
     def do_rss(self):
         for group_id in self.groups:
-            self.get_group_trxs(group_id)
-            self.send_group_msg_to_xin(group_id)
+            try:
+                self.get_group_trxs(group_id)
+            except Exception as e:
+                logger.warning(f"get_group_trxs group_id: {group_id} {e}")
+
+            try:
+                self.send_group_msg_to_xin(group_id)
+            except Exception as e:
+                logger.warning(f"send_group_msg_to_xin group_id: {group_id} {e}")
 
     def counts_trxs(self, group_id, days=-1, num=100):
         """counts trxs num of every pubkey published at that day.

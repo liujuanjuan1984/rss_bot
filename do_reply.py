@@ -9,5 +9,10 @@ from rss import ReplyBot
 bot = ReplyBot()
 
 while True:
-    bot.reply()
+    try:
+        bot.reply()
+    except Exception as e:
+        print("reply failed:", e)
+        bot = ReplyBot()
+
     time.sleep(1)
