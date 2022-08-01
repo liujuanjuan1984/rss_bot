@@ -1,3 +1,4 @@
+import datetime
 import time
 
 from rss import ReplyBot
@@ -12,7 +13,7 @@ while True:
     try:
         bot.reply()
     except Exception as e:
-        print("reply failed:", e)
+        print(datetime.datetime.now(), "reply failed:", e)
         bot = ReplyBot()
 
     time.sleep(1)

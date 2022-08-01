@@ -267,7 +267,7 @@ class RumBot:
                         seedurl=seedurl,
                     )
                 if "trx_id" in resp:
-                    print("send_to_rum, message_id:", msg.message_id)
+                    print(datetime.datetime.now(), "send_to_rum, message_id:", msg.message_id)
                     self.blaze_db.set_message_sent(msg.message_id)
                     self.rss_db.update_sent_msgs(msg.message_id, resp["trx_id"], quoted.group_id, msg.user_id)
 
@@ -288,7 +288,7 @@ class RumBot:
                 resp = self.full_rum.api.send_note(group_id=group_id, content=text)
 
             if "trx_id" in resp:
-                print("send_to_rum, message_id:", msg.message_id)
+                print(datetime.datetime.now(), "send_to_rum, message_id:", msg.message_id)
                 self.blaze_db.set_message_sent(msg.message_id)
                 self.rss_db.update_sent_msgs(msg.message_id, resp["trx_id"], group_id, msg.user_id)
 

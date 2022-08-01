@@ -1,3 +1,4 @@
+import datetime
 import logging
 import re
 import time
@@ -103,10 +104,10 @@ class ReplyBot:
 
         if "data" in resp:
             self.blaze_db.set_message_replied(msg.message_id)
-            print(f"{msg.message_id} replied")
+            print(f"{datetime.datetime.now()} {msg.message_id} replied")
             return True
         else:
-            print(f"{msg.message_id} failed")
+            print(f"{datetime.datetime.now()} {msg.message_id} failed")
             return False
 
     def reply(self):
@@ -114,8 +115,8 @@ class ReplyBot:
         for msg in msgs:
             try:
                 r = self._reply(msg)
-                print(r, msg.message_id)
+                print(datetime.datetime.now(), r, msg.message_id)
             except Exception as e:
-                print(f"{msg.message_id} failed: {e}")
+                print(datetime.datetime.now(), f"{msg.message_id} failed: {e}")
                 logger.error(f"{msg.message_id} failed: {e}")
             time.sleep(0.5)

@@ -15,6 +15,3 @@ mixin_keystore_file = os.path.join(os.path.dirname(__file__), "mixin_keystore.js
 
 with open(mixin_keystore_file, "r") as f:
     MIXIN_KEYSTORE = json.loads(f.read())
-
-
-print("Mixin keystore:", MIXIN_KEYSTORE)
