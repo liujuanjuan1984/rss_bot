@@ -14,6 +14,5 @@ while True:
         bot.reply()
     except Exception as e:
         print(datetime.datetime.now(), "reply failed:", e)
-        bot = ReplyBot()
 
     time.sleep(1)
