@@ -62,11 +62,15 @@ class RumBot:
 
         p_tid = None if progress == None else progress.trx_id
 
-        users_data = self.full_rum.api.update_profiles_data(
-            group_id=group_id,
-            users_data={"trx_id": p_tid},
-            types=("name", "wallet"),
-        )
+        try:
+            users_data = self.full_rum.api.update_profiles_data(
+                group_id=group_id,
+                users_data={"trx_id": p_tid},
+                types=("name", "wallet"),  # TODO: wallet is not updated to main yet
+            )
+        except Exception as e:
+            logger.warning(f"update_profiles group_id: {group_id} {e}")
+            return
         if users_data is None:
             return
         tid = users_data.get("trx_id")
@@ -220,17 +224,7 @@ class RumBot:
             text = self._check_text(trx.text)
 
             # 特殊处理，某些不对所有人发放的动态，会对自己发放。
-            if text == False:
-                if MY_XIN_USER_ID in _sent_users:
-                    continue
-                cid = self.xin.get_conversation_id_with_user(MY_XIN_USER_ID)
-                msg = pack_message(pack_text_data(trx.text), cid)
-                resp = self.xin.api.send_messages(msg)
-
-                if "data" in resp:
-                    self.rss_db.add_trx_sent(group_id, trx.trx_id, MY_XIN_USER_ID)
-
-            else:
+            if text != False:
                 packed = pack_text_data(trx.text)
                 for user_id, *others in users:
                     if user_id in _sent_users:
@@ -253,7 +247,7 @@ class RumBot:
             if quoted:
                 if quoted.group_id in PRIVATE_GROUPS:
                     continue
-                pvtkey = self.rss_db.get_privatekey(msg.user_id).replace("0x", "")
+                pvtkey = self.rss_db.get_privatekey(msg.user_id)
                 seedurl = self.full_rum.api.seed(quoted.group_id).get("seed", "") + APIHOST
                 if msg.text in ["赞", "点赞", "1", "+1"]:
                     resp = self.mini_rum.like(pvtkey, quoted.trx_id, seedurl=seedurl)
@@ -275,17 +269,9 @@ class RumBot:
         for msg in mixin_msgs:
             if len(msg.text) < 5:  # too short to send
                 continue
-            if msg.user_id != MY_XIN_USER_ID:
-                pvtkey = self.rss_db.get_privatekey(msg.user_id).replace("0x", "")
-                resp = self.mini_rum.send_note(pvtkey, content=msg.text[3:], seedurl=SEEDURL)
-            else:
-                if msg.text.startswith(r"代发微博"):
-                    group_id = COMMON_RUM_GROUP_ID
-                    text = msg.text[5:]
-                else:
-                    group_id = MY_RUM_GROUP_ID
-                    text = msg.text[3:]
-                resp = self.full_rum.api.send_note(group_id=group_id, content=text)
+
+            pvtkey = self.rss_db.get_privatekey(msg.user_id)
+            resp = self.mini_rum.send_note(pvtkey, content=msg.text[3:], seedurl=SEEDURL)
 
             if "trx_id" in resp:
                 print(datetime.datetime.now(), "send_to_rum, message_id:", msg.message_id)

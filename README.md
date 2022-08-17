@@ -29,10 +29,6 @@ cd rss_bot
 
 初始化环境：
 
-```pipenv install``` 可能需要安装 bitarray 的依赖组件
-
-或
-
 ```pip install -r requirements.txt```
 
 4、更新配置文件
@@ -45,27 +41,27 @@ cd rss_bot
 - blaze 服务：监听 user 发给 mixin bot 的消息，并写入消息 db
 
 ```bash
-pipenv run python do_blaze.py
+python do_blaze.py
 ```
 
 - reply 服务：订阅交互，回复特定的用户消息，并更新订阅 db
 
 ```bash
-pipenv run python do_reply.py
+python do_reply.py
 ```
 
 - rss 服务：从 rum 获取最新内容，并根据用户订阅推送给用户
 - rum 服务：把以“代发：”开头的消息文本，采用托管的密钥发布到指定的 rum group 上
 
 ```bash
-pipenv run python do_rum.py
+python do_rum.py
 ```
 
 - airdrop 服务：可向 mixin bot 的用户，或指定 rum group 中符合特定条件的用户空投。
 
 
 ```bash
-pipenv run python do_airdrop.py
+python do_airdrop.py
 ```
 
 ## 依赖：
@@ -86,7 +82,7 @@ Format:
 
 ```bash
 isort .
-black -l 120 -t py37 -t py38 -t py39 -t py310 .
+black -l 120 -t py39 .
 ```
 
 db: 
